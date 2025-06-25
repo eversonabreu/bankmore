@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35931.197 d17.13
+VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Core.Web", "BankMore.Core.Web\BankMore.Core.Web.csproj", "{D540E72D-4ED7-43C1-9256-C3CD7AE9C36A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Core.Utils", "BankMore.Core.Utils\BankMore.Core.Utils.csproj", "{CA1271AF-3EC9-4231-B176-A2532DA3337E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankMore.Core.Infrastructure", "BankMore.Core.Infrastructure\BankMore.Core.Infrastructure.csproj", "{5702C11E-8ED5-4070-9D1A-BB6CDAE71B27}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{D540E72D-4ED7-43C1-9256-C3CD7AE9C36A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D540E72D-4ED7-43C1-9256-C3CD7AE9C36A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D540E72D-4ED7-43C1-9256-C3CD7AE9C36A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA1271AF-3EC9-4231-B176-A2532DA3337E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA1271AF-3EC9-4231-B176-A2532DA3337E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA1271AF-3EC9-4231-B176-A2532DA3337E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA1271AF-3EC9-4231-B176-A2532DA3337E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5702C11E-8ED5-4070-9D1A-BB6CDAE71B27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5702C11E-8ED5-4070-9D1A-BB6CDAE71B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5702C11E-8ED5-4070-9D1A-BB6CDAE71B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5702C11E-8ED5-4070-9D1A-BB6CDAE71B27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
