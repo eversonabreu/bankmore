@@ -74,5 +74,21 @@ public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
             entity.Property(e => e.PayloadRequisition).HasColumnName("requisicao").HasColumnType("text").IsRequired();
             entity.Property(e => e.PayloadResponse).HasColumnName("resultado").HasColumnType("text").IsRequired();
         });
+
+        SeedInitialData(modelBuilder);
+    }
+
+    // Este método foi necessário para criar um registro inicial no banco de dados de conta corrente
+    // A senha está com criptografia simples em MD5 (o valor é "1234"). Obviamente que num cenário real, ela deve ser melhor protegida
+    private static void SeedInitialData(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Domain.Entities.CurrentAccount>().HasData(new Domain.Entities.CurrentAccount
+        {
+            Number = 1234,
+            Name = "Ana",
+            IsActive = true,
+            Password = "81dc9bdb52d04dc20036dbd8313ed055",
+            PersonDocumentNumber = "05450395922"
+        });
     }
 }
