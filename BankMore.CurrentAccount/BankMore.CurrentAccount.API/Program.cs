@@ -1,4 +1,7 @@
-using Microsoft.OpenApi.Models;
+using BankMore.Core.Infrastructure.Database;
+using BankMore.CurrentAccount.Infrastructure.Database;
+using BankMore.Core.Web.JWT;
+using BankMore.Core.Web.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -6,39 +9,15 @@ builder.Services.AddMvc(options =>
     options.EnableEndpointRouting = false;
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(swg =>
-{
-    swg.SwaggerDoc("v1", new OpenApiInfo { Title = "BankMore.CurrentAccount.API", Version = "v1" });
-
-    swg.AddSecurityDefinition("authorization", new OpenApiSecurityScheme
-    {
-        Name = "authorization",
-        Type = SecuritySchemeType.ApiKey,
-        In = ParameterLocation.Header
-    });
-
-    swg.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-              Reference = new OpenApiReference
-              {
-                Type = ReferenceType.SecurityScheme,
-                Id = "authorization"
-              }
-             },
-             Array.Empty<string>()
-       }
-    });
-});
+builder.Services.AddSwaggerConfiguration("BankMore.CurrentAccount.API", "v1");
+builder.Services.ConfigureJwtServices(builder.Configuration);
+builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>("CurrentAccount.db");
 
 var app = builder.Build();
 
 if (!app.Environment.IsProduction())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerConfiguration();
 }
 
 app.UseHttpsRedirection();

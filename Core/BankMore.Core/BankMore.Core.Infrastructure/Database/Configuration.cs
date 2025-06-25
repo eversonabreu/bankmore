@@ -8,7 +8,7 @@ public static class Configuration
     public static IServiceCollection AddSQliteConfiguredDbContext<TContext>(
         this IServiceCollection services,
         string dbFileName)
-        where TContext : DatabaseContext
+        where TContext : DbContext
     {
         var connectionString = GetConnectionString(dbFileName);
 

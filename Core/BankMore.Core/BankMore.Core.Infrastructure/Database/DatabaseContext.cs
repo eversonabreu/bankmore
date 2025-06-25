@@ -2,6 +2,6 @@
 
 namespace BankMore.Core.Infrastructure.Database;
 
-public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
+public class DatabaseContext<TContext>(DbContextOptions<TContext> options) : DbContext(options) where TContext : DbContext
 {
 }
