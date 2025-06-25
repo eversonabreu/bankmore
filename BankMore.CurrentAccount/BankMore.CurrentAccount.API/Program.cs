@@ -2,6 +2,8 @@ using BankMore.Core.Infrastructure.Database;
 using BankMore.CurrentAccount.Infrastructure.Database;
 using BankMore.Core.Web.JWT;
 using BankMore.Core.Web.Swagger;
+using Microsoft.EntityFrameworkCore;
+using BankMore.CurrentAccount.Domain.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -11,7 +13,7 @@ builder.Services.AddMvc(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration("BankMore.CurrentAccount.API", "v1");
 builder.Services.ConfigureJwtServices(builder.Configuration);
-builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>("CurrentAccount.db");
+builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.ApplicationDatabaseName);
 
 var app = builder.Build();
 
@@ -23,4 +25,11 @@ if (!app.Environment.IsProduction())
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseMvc();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate();
+}
+
 app.Run();

@@ -5,8 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankMore.CurrentAccount.Infrastructure.Database;
 
-public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DatabaseContext<ApplicationDbContext>(options)
+public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
 {
+    public ApplicationDbContext(): base(new()) { }
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options): base(options) { }
+
     public DbSet<Domain.Entities.CurrentAccount> CurrentAccounts { get; set; }
 
     public DbSet<Movement> Movements { get; set; }

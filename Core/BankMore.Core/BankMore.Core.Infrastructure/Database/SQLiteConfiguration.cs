@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BankMore.Core.Infrastructure.Database;
 
-public static class Configuration
+public static class SQLiteConfiguration
 {
     public static IServiceCollection AddSQliteConfiguredDbContext<TContext>(
         this IServiceCollection services,
@@ -18,7 +18,7 @@ public static class Configuration
         return services;
     }
 
-    private static string GetConnectionString(string dbFileName)
+    public static string GetConnectionString(string dbFileName)
     {
         var current = new DirectoryInfo(Directory.GetCurrentDirectory());
 
