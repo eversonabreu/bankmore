@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using BankMore.CurrentAccount.Domain.Helpers;
 using BankMore.CurrentAccount.Infrastructure;
 using BankMore.CurrentAccount.Application;
+using BankMore.CurrentAccount.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -17,6 +18,7 @@ builder.Services.AddSwaggerConfiguration("BankMore.CurrentAccount.API", "v1");
 builder.Services.ConfigureJwtServices(builder.Configuration);
 builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.ApplicationDatabaseName);
 builder.Services.AddInfrastructureServices();
+builder.Services.AddDomainServices();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
 
 var app = builder.Build();

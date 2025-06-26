@@ -87,7 +87,7 @@ public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
             Number = 1234,
             Name = "Ana",
             IsActive = true,
-            Password = "81dc9bdb52d04dc20036dbd8313ed055",
+            Password = "81DC9BDB52D04DC20036DBD8313ED055",
             PersonDocumentNumber = "05450395922"
         });
     }

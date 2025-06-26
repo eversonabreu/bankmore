@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\BankMore.Core\BankMore.Core.Utils\BankMore.Core.Utils.csproj" />
+    <ProjectReference Include="..\..\Core\BankMore.Core\BankMore.Core.Web\BankMore.Core.Web.csproj" />
     <ProjectReference Include="..\BankMore.CurrentAccount.Domain\BankMore.CurrentAccount.Domain.csproj" />
   </ItemGroup>
 

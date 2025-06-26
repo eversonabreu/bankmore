@@ -25,11 +25,12 @@ internal sealed class AuthorizationFilter : ActionFilterAttribute
             return;
         }
 
-        var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var userName = user.FindFirst(ClaimTypes.Name)?.Value;
-
-        ctx.HttpContext.Items["UserId"] = userId;
-        ctx.HttpContext.Items["UserName"] = userName;
+        var numberAccount = long.Parse(user.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var userName = user.FindFirst(ClaimTypes.Name).Value;
+        var propertyLoggedNumberAccount = ctx.Controller.GetType().GetProperty("LoggedNumberAccount");
+        propertyLoggedNumberAccount.SetValue(ctx.Controller, numberAccount);
+        var propertyLoggedPersonName = ctx.Controller.GetType().GetProperty("LoggedPersonName");
+        propertyLoggedPersonName.SetValue(ctx.Controller, userName);
 
         await base.OnActionExecutionAsync(ctx, next);
     }

@@ -7,13 +7,13 @@ namespace BankMore.Core.Web.JWT;
 
 public class JwtToken
 {
-    public static string Create(JwtSettings jwtSettings, string accountNumber, string personName)
+    public static string Create(JwtSettings jwtSettings, long numberAccount, string personName)
     {
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Sub, accountNumber),
+            new Claim(JwtRegisteredClaimNames.Sub, numberAccount.ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, personName),
-            new Claim(ClaimTypes.NameIdentifier, accountNumber),
+            new Claim(ClaimTypes.NameIdentifier, numberAccount.ToString()),
             new Claim(ClaimTypes.Name, personName)
         };
 

@@ -10,7 +10,7 @@ namespace BankMore.CurrentAccount.API.Controllers;
 [Route("api/teste")]
 public class TesteController(IMediator mediator) : ApplicationController
 {
-    [HttpGet("get-x"), AllowAnonymous]
+    [HttpGet("get-x")]
     public IActionResult Teste([FromServices] ICurrentAccountRepository act) => Ok(new { act.FirstAsync(x => true).Result });
 
     [HttpPost, AllowAnonymous]
