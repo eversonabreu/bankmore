@@ -15,7 +15,7 @@ public sealed class CreateCurrentAccountHandler(ICurrentAccountRepository reposi
         {
             Number = await GetNewNumberAccountAsync(),
             Name = request.Name,
-            IsActive = request.IsActive,
+            IsActive = true,
             // criptografia simples, apenas para fins demonstrativos
             Password = request.Password.ComputeMd5Hash(),
             PersonDocumentNumber = request.PersonDocumentNumber

@@ -7,6 +7,8 @@ using BankMore.CurrentAccount.Domain.Helpers;
 using BankMore.CurrentAccount.Infrastructure;
 using BankMore.CurrentAccount.Application;
 using BankMore.CurrentAccount.Domain;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -20,6 +22,8 @@ builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.Ap
 builder.Services.AddInfrastructureServices();
 builder.Services.AddDomainServices();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
+builder.Services.AddValidatorsFromAssembly(typeof(AssemblyMarker).Assembly);
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 

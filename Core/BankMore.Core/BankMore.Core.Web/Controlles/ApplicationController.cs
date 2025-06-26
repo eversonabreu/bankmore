@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BankMore.Core.Web.Controlles;
 
 [Authorize]
+[ApiController]
 public class ApplicationController : ControllerBase
 {
     public long LoggedNumberAccount { get; set; }
