@@ -4,6 +4,8 @@ using BankMore.Core.Web.JWT;
 using BankMore.Core.Web.Swagger;
 using Microsoft.EntityFrameworkCore;
 using BankMore.CurrentAccount.Domain.Helpers;
+using BankMore.CurrentAccount.Infrastructure;
+using BankMore.CurrentAccount.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -14,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration("BankMore.CurrentAccount.API", "v1");
 builder.Services.ConfigureJwtServices(builder.Configuration);
 builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.ApplicationDatabaseName);
+builder.Services.AddInfrastructureServices();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
 
 var app = builder.Build();
 

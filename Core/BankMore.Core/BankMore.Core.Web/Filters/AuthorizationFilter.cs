@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
@@ -9,6 +10,12 @@ internal sealed class AuthorizationFilter : ActionFilterAttribute
 {
     public override async Task OnActionExecutionAsync(ActionExecutingContext ctx, ActionExecutionDelegate next)
     {
+        if (ctx.Filters.Any(x => x.GetType() == typeof(AllowAnonymousFilter)))
+        {
+            await base.OnActionExecutionAsync(ctx, next);
+            return;
+        }
+
         var user = ctx.HttpContext.User;
         var isAuthenticated = user?.Identity?.IsAuthenticated ?? false;
 
