@@ -47,6 +47,9 @@ internal sealed class AuthApplicationService(ICurrentAccountRepository repositor
         if (account.Password != hashedPassword)
             return Fail();
 
+        if (!account.IsActive)
+            return Fail(LoginStatusEnum.FailWhenUserInactive);
+
         return new LoginResponseDto(LoginStatusEnum.Success, account.Number, account.Name);
     }
 

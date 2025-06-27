@@ -9,6 +9,8 @@ public static class Constants
         public const string FailLoginUser = "USER_UNAUTHORIZED";
         public const string FailLoginUserWhenUserNotFound = "Credências inválidas. Usuário ou senha incorretos.";
         public const string FailLoginUserWhenManyPersonDocument = "Não foi possível autenticar, porque existe mais de uma conta-corrente registrada para o CPF informado. Por gentileza, faça login com o número da sua conta-corrente.";
+        public const string FailLoginUserWhenUserInactive = "O seu acesso a conta-corrente está desabilitado.";
         public const string FailSavePersonDocument = "INVALID_DOCUMENT";
+        public const string FailDeactivateCurrentAccount = "NOT_FOUND_CURRENT_ACCOUNT";
     }
 }

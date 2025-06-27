@@ -29,6 +29,8 @@ public static class JwtConfigureServices
                 };
             });
 
+        services.AddMemoryCache();
+
         services.AddControllers(options =>
         {
             options.Filters.Add<AuthorizationFilter>();

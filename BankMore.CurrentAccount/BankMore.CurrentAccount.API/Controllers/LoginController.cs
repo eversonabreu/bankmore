@@ -25,9 +25,12 @@ public sealed class LoginController : ApplicationController
             });
         }
 
-        return CustomUnauthorized(Constants.ApplicationErrors.FailLoginUser,
+        return CustomUnauthorized(
             result.LoginStatus == Domain.Enums.LoginStatusEnum.FailWhenManyPersonDocument 
                 ? Constants.ApplicationErrors.FailLoginUserWhenManyPersonDocument
-                : Constants.ApplicationErrors.FailLoginUserWhenUserNotFound);
+                : (result.LoginStatus == Domain.Enums.LoginStatusEnum.FailWhenUserInactive
+                    ? Constants.ApplicationErrors.FailLoginUserWhenUserInactive
+                    : Constants.ApplicationErrors.FailLoginUserWhenUserNotFound),
+            Constants.ApplicationErrors.FailLoginUser);
     }
 }

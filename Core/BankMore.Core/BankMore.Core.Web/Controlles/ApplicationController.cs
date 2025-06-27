@@ -11,6 +11,9 @@ public class ApplicationController : ControllerBase
 
     public string LoggedPersonName { get; set; }
 
-    protected IActionResult CustomUnauthorized(string messageErrorCode, string messageErrorDescription = null)
-        => Unauthorized(new { messageErrorCode, messageErrorDescription });
+    protected IActionResult CustomUnauthorized(string errorMessage, string errorCode)
+        => Unauthorized(new { errorMessage, errorCode });
+
+    protected IActionResult CustomBadRequest(string errorMessage, string errorCode)
+        => BadRequest(new { errors = new List<dynamic> { new { message = errorMessage, code = errorCode } } });
 }

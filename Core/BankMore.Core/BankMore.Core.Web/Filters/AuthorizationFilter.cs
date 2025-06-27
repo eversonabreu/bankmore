@@ -21,7 +21,7 @@ internal sealed class AuthorizationFilter : ActionFilterAttribute
 
         if (!isAuthenticated)
         {
-            ctx.Result = new StatusCodeResult(StatusCodes.Status401Unauthorized);
+            ctx.Result = new StatusCodeResult(StatusCodes.Status403Forbidden);
             return;
         }
 

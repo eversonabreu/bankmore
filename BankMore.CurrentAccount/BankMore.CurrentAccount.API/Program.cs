@@ -9,6 +9,7 @@ using BankMore.CurrentAccount.Application;
 using BankMore.CurrentAccount.Domain;
 using FluentValidation.AspNetCore;
 using FluentValidation;
+using BankMore.Core.Infrastructure.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -24,6 +25,7 @@ builder.Services.AddDomainServices();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly));
 builder.Services.AddValidatorsFromAssembly(typeof(AssemblyMarker).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddSingleton<IMessageService, MessageService>();
 
 var app = builder.Build();
 

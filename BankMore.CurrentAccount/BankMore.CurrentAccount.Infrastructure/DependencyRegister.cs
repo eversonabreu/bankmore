@@ -9,5 +9,6 @@ public static class DependencyRegister
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<ICurrentAccountRepository, CurrentAccountRepository>();
+        services.AddScoped<IIdempotencyRepository, IdempotencyRepository>();
     }
 }

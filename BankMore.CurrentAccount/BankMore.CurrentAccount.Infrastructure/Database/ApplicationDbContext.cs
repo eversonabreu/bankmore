@@ -72,7 +72,7 @@ public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
             entity.Property(e => e.Key).HasColumnName("chave").HasMaxLength(100).IsRequired();
             entity.HasIndex(e => e.Key).IsUnique().HasDatabaseName("idx_chave_idempotencia");
             entity.Property(e => e.PayloadRequisition).HasColumnName("requisicao").HasColumnType("text").IsRequired();
-            entity.Property(e => e.PayloadResponse).HasColumnName("resultado").HasColumnType("text").IsRequired();
+            entity.Property(e => e.PayloadResponse).HasColumnName("resultado").HasColumnType("text");
         });
 
         SeedInitialData(modelBuilder);
