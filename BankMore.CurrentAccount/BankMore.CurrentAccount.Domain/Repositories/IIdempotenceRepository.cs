@@ -2,6 +2,6 @@
 
 namespace BankMore.CurrentAccount.Domain.Repositories;
 
-public interface IIdempotencyRepository : IDbRepository<Entities.Idempotency>
+public interface IIdempotenceRepository : IDbRepository<Entities.Idempotence>
 {
 }

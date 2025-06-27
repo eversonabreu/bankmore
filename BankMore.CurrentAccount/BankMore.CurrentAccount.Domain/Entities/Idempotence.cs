@@ -2,7 +2,7 @@
 
 namespace BankMore.CurrentAccount.Domain.Entities;
 
-public class Idempotency : Entity
+public class Idempotence : Entity
 {
     public string Key { get; set; }
 

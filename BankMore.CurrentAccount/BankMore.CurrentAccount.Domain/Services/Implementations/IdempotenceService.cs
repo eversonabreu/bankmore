@@ -7,20 +7,20 @@ using Microsoft.Extensions.Logging;
 
 namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
-public sealed class IdempotencyService(
-    IIdempotencyRepository repository,
+public sealed class IdempotenceService(
+    IIdempotenceRepository repository,
     IMemoryCache cache,
-    ILogger<IdempotencyService> logger,
-    IConfiguration configuration) : IIdempotencyService
+    ILogger<IdempotenceService> logger,
+    IConfiguration configuration) : IIdempotenceService
 {
-    public async Task<Idempotency> GetCompletedAsync(string key)
+    public async Task<Idempotence> GetCompletedAsync(string key)
     {
         if (string.IsNullOrWhiteSpace(key))
             return null;
 
-        if (cache.TryGetValue(key, out Idempotency cached) && !string.IsNullOrEmpty(cached.PayloadResponse))
+        if (cache.TryGetValue(key, out Idempotence cached) && !string.IsNullOrEmpty(cached.PayloadResponse))
         {
-            logger.LogInformation("Idempotency hit from cache: {Key}", key);
+            logger.LogInformation("Idempotence hit from cache: {Key}", key);
             return cached;
         }
 
@@ -28,7 +28,7 @@ public sealed class IdempotencyService(
 
         if (entity is not null && !string.IsNullOrEmpty(entity.PayloadResponse))
         {
-            logger.LogInformation("Idempotency found in DB and added to cache: {Key}", key);
+            logger.LogInformation("Idempotence found in DB and added to cache: {Key}", key);
             var expirationStr = configuration["Cache:ExpirationTime"];
             var minutes = int.TryParse(expirationStr, out var result) ? result : 10;
             var cacheExpiration = TimeSpan.FromMinutes(minutes);

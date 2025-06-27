@@ -2,5 +2,5 @@
 
 public interface IMessageService
 {
-    public Task PublishAsync(string topic, string key, string value);
+    public Task PublishAsync<TValue>(string topic, TValue value);
 }

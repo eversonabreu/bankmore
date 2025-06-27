@@ -15,7 +15,7 @@ public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
 
     public DbSet<Movement> Movements { get; set; }
 
-    public DbSet<Idempotency> Idempotencies { get; set; }
+    public DbSet<Idempotence> Idempotencies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -65,8 +65,9 @@ public sealed class ApplicationDbContext : DatabaseContext<ApplicationDbContext>
             entity.ToTable(tb => tb.HasCheckConstraint("check_constraint_tipo_movimentacao_invalido", "tipo_movimentacao IN ('C','D')"));
         });
 
-        modelBuilder.Entity<Idempotency>(entity =>
+        modelBuilder.Entity<Idempotence>(entity =>
         {
+            entity.ToTable("idempotencia");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd().IsRequired();
             entity.Property(e => e.Key).HasColumnName("chave").HasMaxLength(100).IsRequired();

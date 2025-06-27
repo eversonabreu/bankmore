@@ -2,7 +2,7 @@
 
 namespace BankMore.CurrentAccount.Domain.Services.Contracts;
 
-public interface IIdempotencyService
+public interface IIdempotenceService
 {
-    public Task<Idempotency> GetCompletedAsync(string key);
+    public Task<Idempotence> GetCompletedAsync(string key);
 }

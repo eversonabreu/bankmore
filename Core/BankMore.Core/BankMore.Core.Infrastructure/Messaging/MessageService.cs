@@ -1,4 +1,5 @@
-﻿using Confluent.Kafka;
+﻿using System.Text.Json;
+using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -11,13 +12,9 @@ public sealed class MessageService : IMessageService
 
     public MessageService(IConfiguration config, ILogger<MessageService> logger)
     {
-        var bootstrapServers = config["Kafka:BootstrapServers"];
-        if (string.IsNullOrWhiteSpace(bootstrapServers))
-            throw new InvalidOperationException("Kafka BootstrapServers configuration is missing.");
-
         var configKafka = new ProducerConfig
         {
-            BootstrapServers = bootstrapServers,
+            BootstrapServers = config["Kafka:BootstrapServers"],
             Acks = Acks.All,
             EnableIdempotence = true
         };
@@ -26,23 +23,24 @@ public sealed class MessageService : IMessageService
         _logger = logger;
     }
 
-    public async Task PublishAsync(string topic, string key, string value)
+    public async Task PublishAsync<TValue>(string topic, TValue value)
     {
         try
         {
+            var json = JsonSerializer.Serialize(value);
+
             var msg = new Message<string, string>
             {
-                Key = key,
-                Value = value
+                Value = json
             };
 
             var deliveryResult = await _producer.ProduceAsync(topic, msg);
 
-            _logger.LogInformation("Mensagem publicada no Kafka - Tópico: {Topic}, Offset: {Offset}", topic, deliveryResult.Offset);
+            _logger.LogInformation("Kafka message published - Topic: {Topic}, Offset: {Offset}", topic, deliveryResult.Offset);
         }
         catch (ProduceException<string, string> ex)
         {
-            _logger.LogError(ex, "Erro ao publicar mensagem no Kafka.");
+            _logger.LogError(ex, "Kafka message publish error.");
             throw;
         }
     }
