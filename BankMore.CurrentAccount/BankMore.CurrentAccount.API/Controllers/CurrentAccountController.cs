@@ -27,7 +27,7 @@ public class CurrentAccountController(IMediator mediator) : ApplicationControlle
         }
 
         return CustomBadRequest("A conta-corrente não foi encontrada ou já estava inativa.",
-            Constants.ApplicationErrors.FailDeactivateCurrentAccount);
+            Constants.ApplicationMessages.FailDeactivateCurrentAccount);
     }
 
     // como não foi solicitado na especificação, vou suprimir os demais endpoints

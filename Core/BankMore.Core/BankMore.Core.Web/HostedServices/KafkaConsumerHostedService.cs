@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BankMore.Core.Web.HostedServices;
 
-public sealed class KafkaConsumerHostedService : BackgroundService
+internal sealed class KafkaConsumerHostedService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IConsumer<Ignore, string> _consumer;
@@ -44,7 +44,7 @@ public sealed class KafkaConsumerHostedService : BackgroundService
 
                 if (handler != null && result?.Message?.Value != null)
                 {
-                    await handler.HandleAsync(result.Message.Value);
+                    await handler.HandleMessageAsync(result.Message.Value);
                 }
             }
             catch (OperationCanceledException)

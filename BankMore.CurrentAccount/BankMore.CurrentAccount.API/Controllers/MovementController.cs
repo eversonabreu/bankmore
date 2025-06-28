@@ -1,8 +1,8 @@
 ﻿using BankMore.Core.Web.Controlles;
 using Microsoft.AspNetCore.Mvc;
-using BankMore.CurrentAccount.Application.Commands;
 using BankMore.CurrentAccount.Domain.Services.Contracts;
 using BankMore.CurrentAccount.Domain.Helpers;
+using BankMore.CurrentAccount.Application.Requests;
 
 namespace BankMore.CurrentAccount.API.Controllers;
 
@@ -10,27 +10,45 @@ namespace BankMore.CurrentAccount.API.Controllers;
 public sealed class MovementController(IMovementService movementService) : ApplicationController
 {
     [HttpPost("create")]
-    public async Task<IActionResult> CreateMovementCurrentAccount([FromBody] CurrentAccountMovementCommand command,
+    public async Task<IActionResult> CreateMovementCurrentAccount([FromBody] MovementRequest command,
         [FromHeader(Name = "Idempotency-Key")] string idempotencyKey)
     {
-        var response = await movementService.GetOrSaveMovementAsync(idempotencyKey,
+        var (Status, PayloadResponse) = await movementService.GetOrSaveMovementAsync(idempotencyKey,
             command.NumberAccount, command.MovementType, command.Value, LoggedNumberAccount);
 
-        if (response.Status == Domain.Enums.MovementOperationEnum.Success)
-            return Content(response.PayloadResponse, "application/json");
+        return Status switch
+        {
+            Domain.Enums.MovementOperationEnum.Success => new ContentResult
+            {
+                Content = PayloadResponse,
+                StatusCode = 200,
+                ContentType = "application/json"
+            },
 
-        if (response.Status == Domain.Enums.MovementOperationEnum.IdempotenceKeyNullOrEmpty)
-            return CustomBadRequest(Constants.ApplicationErrors.IdempotenceKeyNullOrEmpty,
-                Constants.ApplicationErrors.IdempotenceKeyNullOrEmptyMessage);
+            Domain.Enums.MovementOperationEnum.IdempotenceKeyNullOrEmpty =>
+                CustomBadRequest(Constants.ApplicationMessages.IdempotenceKeyNullOrEmptyError,
+                    Constants.ApplicationMessages.IdempotenceKeyNullOrEmptyErrorMessage),
 
-        if (response.Status == Domain.Enums.MovementOperationEnum.InvalidAccount)
-            return CustomBadRequest(Constants.ApplicationErrors.CurrentAccountInvalid,
-                Constants.ApplicationErrors.CurrentAccountInvalidMessage);
+            Domain.Enums.MovementOperationEnum.InvalidAccount =>
+                CustomBadRequest(Constants.ApplicationMessages.CurrentAccountInvalid,
+                    Constants.ApplicationMessages.CurrentAccountInvalidMessage),
 
-        //continuar nas validações de retorno
-        //implementar o serviço que vai consumir o tópico (vai salvar o movimento)
-        //fazer endpoint de consulta de saldo em IMovementService (usar Dapper)
+            Domain.Enums.MovementOperationEnum.InactiveAccount =>
+                CustomBadRequest(Constants.ApplicationMessages.CurrentAccountInactive,
+                    Constants.ApplicationMessages.CurrentAccountInactiveMessage),
 
-        return Ok(response);
+            Domain.Enums.MovementOperationEnum.IdempotenceRequestBodyMismatch =>
+                CustomBadRequest(Constants.ApplicationMessages.IdempotenceRequestBodyMismatchError,
+                    Constants.ApplicationMessages.CurrentAccountInvalidMessage),
+
+            Domain.Enums.MovementOperationEnum.WaitingFinishProccess =>
+                Accepted(new { Message = Constants.ApplicationMessages.MovementWaitingFinishProccess }),
+
+            _ => CustomBadRequest(Constants.ApplicationMessages.FatalErrorMovementCurrentAccountError,
+                Constants.ApplicationMessages.FatalErrorMovementCurrentAccountErrorMessage)
+        };
     }
+
+    //implementar o serviço que vai consumir o tópico (vai salvar o movimento)
+    //fazer endpoint de consulta de saldo em IMovementService (usar Dapper)
 }

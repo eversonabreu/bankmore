@@ -1,4 +1,5 @@
 ﻿using BankMore.Core.Web.Filters;
+using BankMore.Core.Web.HostedServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,7 @@ public static class JwtConfigureServices
             });
 
         services.AddMemoryCache();
+        services.AddHostedService<KafkaConsumerHostedService>();
 
         services.AddControllers(options =>
         {

@@ -28,12 +28,15 @@ public sealed class CreateCurrentAccountHandler(ICurrentAccountRepository reposi
 
     private async Task<long> GetNewNumberAccountAsync()
     {
+        const int minimumNumberToCurrentAccount = 10000;
+        const int maximumNumberToCurrentAccount = 1000000;
+
         Random random = new();
         long number;
 
         do
         {
-            number = random.Next(10000, 1000000); 
+            number = random.Next(minimumNumberToCurrentAccount, maximumNumberToCurrentAccount); 
         }
         while (await repository.SingleOrDefaultAsync(x => x.Number == number) is not null);
 

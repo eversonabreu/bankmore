@@ -10,4 +10,6 @@ public interface IIdempotenceService
         TValue payloadRequest,
         string messageTopicName,
         IMessageTopicHandler messageTopicHandler);
+
+    public Task<string> SavePayloadResponseAsync(string idempotenceKey, object payload);
 }

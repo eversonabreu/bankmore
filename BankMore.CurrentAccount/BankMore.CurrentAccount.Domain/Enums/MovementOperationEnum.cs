@@ -9,5 +9,6 @@ public enum MovementOperationEnum
     WaitingFinishProccess = 5,
     FatalErrorProccessing = 6,
     IdempotenceKeyNullOrEmpty = 7,
-    InvalidType = 8
+    InvalidType = 8,
+    InvalidValue = 9
 }

@@ -1,6 +1,7 @@
 ﻿using BankMore.Core.Infrastructure.Messaging;
 using BankMore.CurrentAccount.Domain.Dtos;
 using BankMore.CurrentAccount.Domain.Enums;
+using BankMore.CurrentAccount.Domain.Helpers;
 using BankMore.CurrentAccount.Domain.Repositories;
 using BankMore.CurrentAccount.Domain.Services.Contracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,13 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
 
         var movement = new MovementDto(numberAccount, movementType, value);
 
-        return await idempotenceService
+        var result = await idempotenceService
             .ProcessAsync(idempotenceKey, movement, Topics.CurrentAccountMovementTopicName, messageTopicHandler);
+
+        if (result.PayloadResponse != null
+            && result.PayloadResponse.Contains(Constants.ApplicationMessages.FatalErrorMovementCurrentAccountError))
+            return (MovementOperationEnum.FatalErrorProccessing, null);
+
+        return result;
     }
 }

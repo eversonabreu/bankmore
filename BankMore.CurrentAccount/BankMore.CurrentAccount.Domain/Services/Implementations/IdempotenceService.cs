@@ -44,27 +44,30 @@ internal sealed class IdempotenceService(
         if (!await CreateIdempotenceAsync(idempotenceKey, payload))
             return (MovementOperationEnum.FatalErrorProccessing, null);
 
-        return await ExecuteAsync(idempotenceKey, payloadRequest, messageTopicName, messageTopicHandler, payload);
+        var idempotenceRequest = new IdempotenceRequestDto<TValue>(idempotenceKey, payloadRequest);
+
+        return await ExecuteAsync(idempotenceRequest, messageTopicName, messageTopicHandler);
     }
 
     private async Task<(MovementOperationEnum Status, string PayloadResponse)> ExecuteAsync<TValue>(
-        string idempotenceKey,
-        TValue payloadRequest,
+        IdempotenceRequestDto<TValue> body,
         string messageTopicName,
-        IMessageTopicHandler messageTopicHandler,
-        string jsonPayload)
+        IMessageTopicHandler messageTopicHandler)
     {
         try
         {
-            logger.LogInformation("Create the executor idempotence. Key: {Key}. Request payload: {Payload}", idempotenceKey, jsonPayload);
-            var result = await messageTopicHandler.HandleAsync(jsonPayload);
+            logger.LogInformation("Create the executor idempotence. Key: {Key}. Request payload: {Payload}", 
+                body.IdempotenceKey, body.PayloadRequisition);
+
+            var result = await messageTopicHandler.HandleAsync(body);
             return (MovementOperationEnum.Success, result);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error while processing or saving idempotence. Key: {Key}", idempotenceKey);
+            logger.LogError(ex, "Error while processing or saving idempotence. Key: {Key}. Request payload: {Payload}",
+                body.IdempotenceKey, body.PayloadRequisition);
 
-            if (await CreateMessagingIdempotenceAsync(idempotenceKey, payloadRequest, messageTopicName))
+            if (await CreateMessagingIdempotenceAsync(body, messageTopicName))
                 return (MovementOperationEnum.WaitingFinishProccess, null);
         }
 
@@ -118,22 +121,29 @@ internal sealed class IdempotenceService(
         return false;
     }
 
-    private async Task<bool> CreateMessagingIdempotenceAsync<TValue>(string idempotenceKey, TValue payloadRequest,
+    private async Task<bool> CreateMessagingIdempotenceAsync<TValue>(IdempotenceRequestDto<TValue> body,
         string messageTopicName)
     {
         try
         {
-            var idempotenceRequest = new IdempotenceRequestDto<TValue>(idempotenceKey, payloadRequest);
-            await messageService.PublishAsync(messageTopicName, idempotenceRequest);
+            await messageService.PublishAsync(messageTopicName, body);
 
-            logger.LogInformation("Message published to Kafka for retry. Topic: {Topic}, Key: {Key}", messageTopicName, idempotenceKey);
+            logger.LogInformation("Message published to Kafka for retry. Topic: {Topic}, Key: {Key}", messageTopicName, body.IdempotenceKey);
             return true;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Failed to publish message to Kafka. Topic: {Topic}, Key: {Key}", messageTopicName, idempotenceKey);
+            logger.LogError(ex, "Failed to publish message to Kafka. Topic: {Topic}, Key: {Key}", messageTopicName, body.IdempotenceKey);
         }
 
         return false;
+    }
+
+    public async Task<string> SavePayloadResponseAsync(string idempotenceKey, object payload)
+    {
+        var idempotence = await repository.SingleAsync(x => x.Key == idempotenceKey);
+        idempotence.PayloadResponse = JsonSerializer.Serialize(payload);
+        await repository.UpdateAsync(idempotence);
+        return idempotence.PayloadResponse;
     }
 }

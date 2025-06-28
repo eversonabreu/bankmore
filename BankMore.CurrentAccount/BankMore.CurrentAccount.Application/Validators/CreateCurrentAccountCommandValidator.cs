@@ -18,7 +18,7 @@ public sealed class CreateCurrentAccountCommandValidator : AbstractValidator<Cre
             .MaximumLength(255).WithMessage("A senha não pode ter mais que 255 caracteres.");
 
         RuleFor(x => x.PersonDocumentNumber)
-            .NotEmpty().WithMessage($"{Constants.ApplicationErrors.FailSavePersonDocument}|O número do CPF deve ser informado obrigatóriamente.")
-            .Must(x => x.CpfValidate()).WithMessage($"{Constants.ApplicationErrors.FailSavePersonDocument}|O CPF informado é inválido.");
+            .NotEmpty().WithMessage($"{Constants.ApplicationMessages.FailSavePersonDocument}|O número do CPF deve ser informado obrigatóriamente.")
+            .Must(x => x.CpfValidate()).WithMessage($"{Constants.ApplicationMessages.FailSavePersonDocument}|O CPF informado é inválido.");
     }
 }

@@ -1,9 +1,8 @@
 ﻿using BankMore.CurrentAccount.Domain.Enums;
-using MediatR;
 
-namespace BankMore.CurrentAccount.Application.Commands;
+namespace BankMore.CurrentAccount.Application.Requests;
 
-public class CurrentAccountMovementCommand : IRequest<MovementOperationEnum>
+public sealed class MovementRequest
 {
     public long? NumberAccount { get; set; }
 
