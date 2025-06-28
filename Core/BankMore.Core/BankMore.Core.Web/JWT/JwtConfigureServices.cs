@@ -36,39 +36,6 @@ public static class JwtConfigureServices
         services.AddControllers(options =>
         {
             options.Filters.Add<AuthorizationFilter>();
-        })
-        .ConfigureApiBehaviorOptions(options =>
-        {
-            options.InvalidModelStateResponseFactory = context =>
-            {
-                var errors = new List<object>();
-
-                foreach (var kvp in context.ModelState)
-                {
-                    foreach (var error in kvp.Value!.Errors)
-                    {
-                        var parts = error.ErrorMessage.Split('|', 2);
-
-                        if (parts.Length == 2)
-                        {
-                            errors.Add(new
-                            {
-                                message = parts[1],
-                                code = parts[0]
-                            });
-                        }
-                        else
-                        {
-                            errors.Add(new
-                            {
-                                message = error.ErrorMessage
-                            });
-                        }
-                    }
-                }
-
-                return new BadRequestObjectResult(new { errors });
-            };
         });
     }
 }

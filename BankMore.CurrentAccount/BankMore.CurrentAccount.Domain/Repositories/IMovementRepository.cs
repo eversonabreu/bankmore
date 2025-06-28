@@ -6,4 +6,6 @@ namespace BankMore.CurrentAccount.Domain.Repositories;
 public interface IMovementRepository : IDbRepository<Entities.Movement>
 {
     public Task<MovementOperationEnum> CreateMovementAsync(long numberAccount, MovementTypeEnum movementType, decimal value);
+
+    public Task<decimal> GetBalanceCurrentAcount(long numberAccount);
 }

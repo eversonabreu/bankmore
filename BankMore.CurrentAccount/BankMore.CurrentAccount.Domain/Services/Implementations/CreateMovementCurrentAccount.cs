@@ -27,7 +27,7 @@ public sealed class CreateMovementCurrentAccount(IMovementRepository movementRep
             {
                 return await idempotenceService.SavePayloadResponseAsync(payload.IdempotenceKey, new
                 {
-                    Status = $"Movimentação na conta-corrent realizada com sucesso em '{DateTime.UtcNow:dd/MM/yyyy HH:mm:ss}'.",
+                    Status = $"Movimentação na conta-correnta realizada com sucesso em '{DateTime.UtcNow:dd/MM/yyyy HH:mm:ss}'.",
                     MovementValue = payload.PayloadRequisition.Value,
                     payload.PayloadRequisition.NumberAccount,
                     MovementOperation = payload.PayloadRequisition.MovementType == Enums.MovementTypeEnum.Credit ? "Crédito" : "Débito"

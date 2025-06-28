@@ -18,9 +18,7 @@ public sealed class CurrentAccountMovementCommandValidator : AbstractValidator<M
             .WithMessage($"{Constants.ApplicationMessages.FailMovementValue}|Value must be greater than 0.");
 
         RuleFor(x => x.MovementType)
-            .IsInEnum()
-            .WithMessage($"{Constants.ApplicationMessages.FailMovementType}|Invalid movement type.")
-            .Must(type => type == MovementTypeEnum.Credit || type == MovementTypeEnum.Debit)
+            .Must(type => type == 'C' || type == 'D' || type == 'c' || type == 'd')
             .WithMessage($"{Constants.ApplicationMessages.FailMovementType}|MovementType must be either 'C' (Credit) or 'D' (Debit).");
     }
 }

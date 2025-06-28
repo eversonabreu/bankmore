@@ -108,6 +108,7 @@ internal sealed class IdempotenceService(
             };
 
             await repository.CreateAsync(entity);
+            await repository.SaveChangesAsync();
 
             logger.LogInformation("New idempotence entry created with key: {Key}", idempotenceKey);
 
@@ -144,6 +145,7 @@ internal sealed class IdempotenceService(
         var idempotence = await repository.SingleAsync(x => x.Key == idempotenceKey);
         idempotence.PayloadResponse = JsonSerializer.Serialize(payload);
         await repository.UpdateAsync(idempotence);
+        await repository.SaveChangesAsync();
         return idempotence.PayloadResponse;
     }
 }

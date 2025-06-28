@@ -10,7 +10,8 @@ namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
 internal sealed class MovementService(IIdempotenceService idempotenceService,
     [FromKeyedServices(Topics.CurrentAccountMovementTopicName)] IMessageTopicHandler messageTopicHandler,
-    ICurrentAccountRepository currentAccountRepository) : IMovementService
+    ICurrentAccountRepository currentAccountRepository,
+    IMovementRepository movementRepository) : IMovementService
 {
     public async Task<(MovementOperationEnum Status, string PayloadResponse)> 
         GetOrSaveMovementAsync(string idempotenceKey, 
@@ -41,4 +42,17 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
 
         return result;
     }
+
+    public async Task<(BalanceDto Balance, MovementOperationEnum Status)> GetBalanceAsync(long numberAccount)
+    {
+        var (currentAccount, movementOperation) = await currentAccountRepository
+            .GetCurrentAccountByNumberAsync(numberAccount);
+
+        if (movementOperation != null)
+            return (null, movementOperation.Value);
+
+        var balanceValue = await movementRepository.GetBalanceCurrentAcount(numberAccount);
+
+        return (new(numberAccount, currentAccount.Name, DateTime.UtcNow, balanceValue), MovementOperationEnum.Success);
+    } 
 }
