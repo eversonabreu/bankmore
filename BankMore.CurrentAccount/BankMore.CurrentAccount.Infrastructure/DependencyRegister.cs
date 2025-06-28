@@ -10,5 +10,6 @@ public static class DependencyRegister
     {
         services.AddScoped<ICurrentAccountRepository, CurrentAccountRepository>();
         services.AddScoped<IIdempotenceRepository, IdempotenceRepository>();
+        services.AddScoped<IMovementRepository, MovementRepository>();
     }
 }

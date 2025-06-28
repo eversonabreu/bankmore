@@ -1,8 +1,13 @@
-﻿using BankMore.CurrentAccount.Domain.Entities;
+﻿using BankMore.Core.Infrastructure.Messaging;
+using BankMore.CurrentAccount.Domain.Enums;
 
 namespace BankMore.CurrentAccount.Domain.Services.Contracts;
 
 public interface IIdempotenceService
 {
-    public Task<Idempotence> GetCompletedAsync(string key);
+    public Task<(MovementOperationEnum Status, string PayloadResponse)> ProcessAsync<TValue>(
+        string idempotenceKey,
+        TValue payloadRequest,
+        string messageTopicName,
+        IMessageTopicHandler messageTopicHandler);
 }

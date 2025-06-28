@@ -9,5 +9,7 @@ public static class DependencyRegister
     public static void AddDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthApplicationService, AuthApplicationService>();
+        services.AddScoped<IIdempotenceService, IdempotenceService>();
+        services.AddScoped<IMovementService, MovementService>();
     }
 }

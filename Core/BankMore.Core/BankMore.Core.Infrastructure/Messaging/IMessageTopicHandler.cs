@@ -2,5 +2,5 @@
 
 public interface IMessageTopicHandler
 {
-    public Task HandleAsync(string payload);
+    public Task<string> HandleAsync(string payload);
 }
