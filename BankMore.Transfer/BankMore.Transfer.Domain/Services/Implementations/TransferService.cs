@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BankMore.Transfer.Domain.Services.Implementations;
 
-internal sealed class TransferService(ITransferRepository transferRepository,
+public sealed class TransferService(ITransferRepository transferRepository,
     IServiceProvider serviceProvider, ILogger<TransferService> logger) : ITransferService
 {
     public async Task<MovementOperationEnum> CreateTransferAsync(TransferDto transferDto)

@@ -17,7 +17,7 @@ internal sealed class TariffingMessageService(IMovementRepository movementReposi
             CurrentAccountId = tariffing.Id,
             MovementDate = DateTime.UtcNow,
             MovementType = Enums.MovementTypeEnum.Debit,
-            Value = tariffing.RateValue
+            Value = tariffing.Value
         });
 
         await movementRepository.SaveChangesAsync();

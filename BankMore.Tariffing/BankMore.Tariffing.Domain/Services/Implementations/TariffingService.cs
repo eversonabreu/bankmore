@@ -6,7 +6,7 @@ using Cons = BankMore.Tariffing.Domain.Constants;
 
 namespace BankMore.Tariffing.Domain.Services.Implementations;
 
-internal sealed class TariffingService(ITariffingRepository tariffingRepository,
+public sealed class TariffingService(ITariffingRepository tariffingRepository,
     IMessageService messageService, ILogger<TariffingService> logger) : ITariffingService
 {
     public async Task CreateTariffingAsync(Guid transferId, Guid currentAccountOriginId)
@@ -31,7 +31,7 @@ internal sealed class TariffingService(ITariffingRepository tariffingRepository,
 
             logger.LogInformation("Publish message tariffing to current accound id: {CurrentAccountOriginId}.", currentAccountOriginId);
 
-            await messageService.PublishAsync(Topics.CurrentAccountTariffingTopicName, new { Id = currentAccountOriginId, Cons.Constants.RateValue });
+            await messageService.PublishAsync(Topics.CurrentAccountTariffingTopicName, new { Id = currentAccountOriginId, Value = Cons.Constants.RateValue });
         }
         catch (Exception exc)
         {
