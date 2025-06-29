@@ -1,5 +1,4 @@
 ﻿using BankMore.CurrentAccount.Application.Requests;
-using BankMore.CurrentAccount.Domain.Enums;
 using BankMore.CurrentAccount.Domain.Helpers;
 using FluentValidation;
 
@@ -18,7 +17,7 @@ public sealed class CurrentAccountMovementCommandValidator : AbstractValidator<M
             .WithMessage($"{Constants.ApplicationMessages.FailMovementValue}|Value must be greater than 0.");
 
         RuleFor(x => x.MovementType)
-            .Must(type => type == 'C' || type == 'D' || type == 'c' || type == 'd')
+            .Must(type => !string.IsNullOrEmpty(type) && (type.ToUpper()[0] == 'C' || type.ToUpper()[0] == 'D'))
             .WithMessage($"{Constants.ApplicationMessages.FailMovementType}|MovementType must be either 'C' (Credit) or 'D' (Debit).");
     }
 }

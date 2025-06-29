@@ -14,7 +14,8 @@ public sealed class MovementController(IMovementService movementService) : Appli
     public async Task<IActionResult> CreateMovementCurrentAccount([FromBody] MovementRequest command,
         [FromHeader(Name = "Idempotency-Key")] string idempotencyKey)
     {
-        var movementType = command.MovementType.ToString().ToUpper() == "C" ? MovementTypeEnum.Credit : MovementTypeEnum.Debit;
+        var movementType = command.MovementType.Equals("C", StringComparison.InvariantCultureIgnoreCase) 
+            ? MovementTypeEnum.Credit : MovementTypeEnum.Debit;
 
         var (Status, PayloadResponse) = await movementService.GetOrSaveMovementAsync(idempotencyKey,
             command.NumberAccount, movementType, command.Value, LoggedNumberAccount);

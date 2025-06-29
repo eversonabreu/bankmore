@@ -10,6 +10,7 @@ using BankMore.CurrentAccount.Domain;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using BankMore.Core.Infrastructure.Messaging;
+using BankMore.Core.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMvc(options =>
@@ -19,6 +20,7 @@ builder.Services.AddMvc(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration("BankMore.CurrentAccount.API", "v1");
 builder.Services.ConfigureJwtServices(builder.Configuration);
+builder.Services.AddCoreServices();
 builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.ApplicationDatabaseName);
 builder.Services.AddInfrastructureServices();
 builder.Services.AddDomainServices();

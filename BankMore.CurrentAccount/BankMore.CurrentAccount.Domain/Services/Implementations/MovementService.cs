@@ -74,7 +74,7 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
         if (movementOperationOrigin != null)
             return (false, "The current account origin is invalid or disabled.");
 
-        var balanceValue = (await GetBalanceAsync(numberAccountOrigin)).Balance.BalanceValue;
+        var balanceValue = await movementRepository.GetBalanceCurrentAcount(numberAccountOrigin);
 
         // não estou permitindo transferir mais do que tem disponível.
         // obviamente que se tivesse um limite de conta, aí seria considerado

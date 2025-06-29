@@ -50,6 +50,6 @@ internal sealed class MovementRepository(ApplicationDbContext context, ICurrentA
             sql,
             new { numberAccount  }) ?? 0m;
 
-        return balance;
+        return decimal.Round(balance, 2);
     }
 }

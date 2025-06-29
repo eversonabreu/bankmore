@@ -8,5 +8,5 @@ public sealed class MovementRequest
 
     public decimal Value { get; set; }
 
-    public char MovementType { get; set; }
+    public string MovementType { get; set; }
 }
