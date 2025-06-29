@@ -1,6 +1,6 @@
-﻿using BankMore.Core.Web.Filters;
+﻿using BankMore.Core.Infrastructure.HttpWrapper;
+using BankMore.Core.Web.Filters;
 using BankMore.Core.Web.HostedServices;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -37,5 +37,14 @@ public static class JwtConfigureServices
         {
             options.Filters.Add<AuthorizationFilter>();
         });
+
+        services.AddHttpClient("ResilientClient")
+            .AddPolicyHandler(sp =>
+            {
+                // add addiotional configuration for Polly
+                // estou usando com no máximo de 3 retentativas, apenas para fins demonstrativos
+                return HttpResiliencePolice.CreatePolicy(3, null);
+            });
+
     }
 }

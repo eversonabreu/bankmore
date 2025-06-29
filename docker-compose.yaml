@@ -1,13 +1,24 @@
 version: '3.9'
 
 services:
-  api:
+  current-account-api:
     build:
       context: .
       dockerfile: ./BankMore.CurrentAccount/Dockerfile
     container_name: bankmore-current-account-api
     ports:
       - "8125:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Homologation
+    depends_on:
+      - kafka
+  transfer-api:
+    build:
+      context: .
+      dockerfile: ./BankMore.Transfer/Dockerfile
+    container_name: bankmore-transfer-api
+    ports:
+      - "8126:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
