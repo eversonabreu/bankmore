@@ -49,6 +49,7 @@ internal sealed class TransferService(ITransferRepository transferRepository,
         catch (Exception exc) 
         {
             logger.LogError(exc, "Error when publish message for save rate in transfer. {Message}", exc.Message);
+            throw;  // it's necessary because musen't be mark the message as consumed
         }
     }
 }

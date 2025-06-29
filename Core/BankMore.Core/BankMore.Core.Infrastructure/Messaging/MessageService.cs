@@ -38,9 +38,16 @@ public sealed class MessageService : IMessageService
 
             _logger.LogInformation("Kafka message published - Topic: {Topic}, Offset: {Offset}", topic, deliveryResult.Offset);
         }
-        catch (ProduceException<string, string> ex)
+        catch (ProduceException<string, string> pexc)
         {
-            _logger.LogError(ex, "Kafka message publish error.");
+            _logger.LogError(pexc, "Kafka message publish error.");
+            Console.WriteLine($"Error Kafka producer message: '{pexc.Message}'.");
+            throw;
+        }
+        catch (Exception exc)
+        {
+            _logger.LogError(exc, "Kafka message publish error default.");
+            Console.WriteLine($"Error Kafka producer default message: '{exc.Message}'.");
             throw;
         }
     }
