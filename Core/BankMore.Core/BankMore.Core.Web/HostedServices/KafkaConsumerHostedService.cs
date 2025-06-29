@@ -139,6 +139,7 @@ internal sealed class KafkaConsumerHostedService : BackgroundService
             catch (Exception exc)
             {
                 _logger.LogError(exc, $"An error occurred during the execution of the Kafka topic consumption. '{exc.Message}'.");
+                Console.WriteLine($"[KAFKA] Error consuming. '{exc.Message}'.");
             }
         }
     }
