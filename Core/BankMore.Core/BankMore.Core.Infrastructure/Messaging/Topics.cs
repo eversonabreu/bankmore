@@ -3,4 +3,5 @@
 public static class Topics
 {
     public const string CurrentAccountMovementTopicName = "current-account-movement-topic";
+    public const string CurrentAccountTransferTopicName = "current-account-transfer-topic";
 }

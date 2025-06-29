@@ -109,7 +109,8 @@ internal sealed class KafkaConsumerHostedService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         // add here others topics
-        IEnumerable<string> topics = [Topics.CurrentAccountMovementTopicName];
+        IEnumerable<string> topics = [Topics.CurrentAccountMovementTopicName,
+            Topics.CurrentAccountTransferTopicName];
 
         await WaitForKafkaAsync(_config.BootstrapServers);
         await EnsureTopicsExistAsync(topics, _config.BootstrapServers);
