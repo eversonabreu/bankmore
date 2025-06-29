@@ -10,7 +10,7 @@ using System.Net.Http.Json;
 
 namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
-internal sealed class MovementService(IIdempotenceService idempotenceService,
+public sealed class MovementService(IIdempotenceService idempotenceService,
     [FromKeyedServices(Topics.CurrentAccountMovementTopicName)] IMessageTopicHandler messageTopicHandler,
     ICurrentAccountRepository currentAccountRepository,
     IMovementRepository movementRepository, IHttpClientFactory httpClientFactory,

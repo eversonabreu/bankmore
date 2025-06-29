@@ -12,7 +12,7 @@ using System.Text.Json;
 
 namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
-internal sealed class IdempotenceService(
+public sealed class IdempotenceService(
     IIdempotenceRepository repository,
     IMemoryCache cache,
     ILogger<IdempotenceService> logger,

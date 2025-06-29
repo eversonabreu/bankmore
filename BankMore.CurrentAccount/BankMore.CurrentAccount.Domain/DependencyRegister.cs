@@ -12,7 +12,7 @@ public static class DependencyRegister
         services.AddScoped<IAuthApplicationService, AuthApplicationService>();
         services.AddScoped<IIdempotenceService, IdempotenceService>();
         services.AddScoped<IMovementService, MovementService>();
-        services.AddKeyedScoped<IMessageTopicHandler, CreateMovementCurrentAccount>(Topics.CurrentAccountMovementTopicName);
+        services.AddKeyedScoped<IMessageTopicHandler, CreateMovementMessageService>(Topics.CurrentAccountMovementTopicName);
         services.AddKeyedScoped<IMessageTopicHandler, TariffingMessageService>(Topics.CurrentAccountTariffingTopicName);
     }
 }

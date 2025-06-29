@@ -8,8 +8,8 @@ using System.Text.Json;
 
 namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
-public sealed class CreateMovementCurrentAccount(IMovementRepository movementRepository,
-    IIdempotenceService idempotenceService, ILogger<CreateMovementCurrentAccount> logger) : IMessageTopicHandler
+public sealed class CreateMovementMessageService(IMovementRepository movementRepository,
+    IIdempotenceService idempotenceService, ILogger<CreateMovementMessageService> logger) : IMessageTopicHandler
 {
     public async Task HandleMessageAsync(string payload)
         => await HandleAsync(JsonSerializer.Deserialize<IdempotenceRequestDto<MovementDto>>(payload));
