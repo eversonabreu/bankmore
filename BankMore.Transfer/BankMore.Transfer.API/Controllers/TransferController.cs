@@ -20,4 +20,9 @@ public sealed class TransferController : ApplicationController
 
         return BadRequest(Enum.GetName(typeof(MovementOperationEnum), response));
     }
+
+    [HttpGet("all-transfers/{currentAccountId:guid}")]
+    public async Task<IActionResult> GetAllTransfersAsync([FromRoute] Guid currentAccountId,
+        [FromServices] ITransferService transferService)
+        => Ok(await transferService.GetTransfersByCurrentAccount(currentAccountId));
 }

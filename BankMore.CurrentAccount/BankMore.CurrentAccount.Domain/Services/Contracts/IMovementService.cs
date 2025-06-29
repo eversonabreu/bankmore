@@ -10,4 +10,6 @@ public interface IMovementService
         long? requestNumberAccount, MovementTypeEnum movementType, decimal value, long loggedNumberAccount);
 
     public Task<(BalanceDto Balance, MovementOperationEnum Status)> GetBalanceAsync(long numberAccount);
+
+    public Task<(bool IsSuccess, string MessageError)> TransferAsync(long numberAccountOrigin, long numberAccountDestination, decimal value);
 }

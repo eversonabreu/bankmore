@@ -4,14 +4,17 @@ using BankMore.CurrentAccount.Domain.Enums;
 using BankMore.CurrentAccount.Domain.Helpers;
 using BankMore.CurrentAccount.Domain.Repositories;
 using BankMore.CurrentAccount.Domain.Services.Contracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
 
 namespace BankMore.CurrentAccount.Domain.Services.Implementations;
 
 internal sealed class MovementService(IIdempotenceService idempotenceService,
     [FromKeyedServices(Topics.CurrentAccountMovementTopicName)] IMessageTopicHandler messageTopicHandler,
     ICurrentAccountRepository currentAccountRepository,
-    IMovementRepository movementRepository) : IMovementService
+    IMovementRepository movementRepository, IHttpClientFactory httpClientFactory,
+    IConfiguration configuration) : IMovementService
 {
     public async Task<(MovementOperationEnum Status, string PayloadResponse)> 
         GetOrSaveMovementAsync(string idempotenceKey, 
@@ -55,4 +58,68 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
 
         return (new(numberAccount, currentAccount.Name, DateTime.UtcNow, balanceValue), MovementOperationEnum.Success);
     } 
+
+    public async Task<(bool IsSuccess, string MessageError)> TransferAsync(long numberAccountOrigin, long numberAccountDestination, decimal value)
+    {
+        if (value <= 0m)
+            return (false, "Value must be grather than 0.");
+
+        if (numberAccountOrigin == numberAccountDestination)
+            return (false, "It's not possible tranfer in the same account.");
+
+        var (origin, movementOperationOrigin) = await currentAccountRepository
+            .GetCurrentAccountByNumberAsync(numberAccountOrigin);
+
+        if (movementOperationOrigin != null)
+            return (false, "The current account origin is invalid or disabled.");
+
+        var balanceValue = (await GetBalanceAsync(numberAccountOrigin)).Balance.BalanceValue;
+
+        // não estou permitindo transferir mais do que tem disponível.
+        // obviamente que se tivesse um limite de conta, aí seria considerado
+        if (value > balanceValue)
+            return (false, "The insuficient balance in current account for transaction.");
+
+        var (destination, movementOperationDestination) = await currentAccountRepository
+            .GetCurrentAccountByNumberAsync(numberAccountDestination);
+
+        if (movementOperationDestination != null)
+            return (false, "The current account destinatrion is invalid or disabled.");
+
+        using var httpClient = httpClientFactory.CreateClient("ResilientClient");
+        httpClient.BaseAddress = new Uri(configuration["TransferApiHost"]);
+
+        var response = await httpClient.PostAsJsonAsync("transfer/create", 
+            new
+            {
+                CurrentAccountOriginId = origin.Id,
+                CurrentAccountDestinationId = destination.Id,
+                TransferValue = value
+            });
+
+        if (response.IsSuccessStatusCode)
+        {
+            await movementRepository.CreateAsync(new Entities.Movement
+            {
+                CurrentAccountId = origin.Id,
+                MovementDate = DateTime.UtcNow,
+                MovementType = MovementTypeEnum.Debit,
+                Value = value
+            });
+
+            await movementRepository.CreateAsync(new Entities.Movement
+            {
+                CurrentAccountId = destination.Id,
+                MovementDate = DateTime.UtcNow,
+                MovementType = MovementTypeEnum.Credit,
+                Value = value
+            });
+
+            await movementRepository.SaveChangesAsync();
+            return (true, null);
+        }
+        
+        string content = await response.Content.ReadAsStringAsync();
+        return (false, content);
+    }
 }

@@ -70,4 +70,16 @@ public sealed class MovementController(IMovementService movementService) : Appli
             _ => Ok(Balance)
         };
     }
+
+    [HttpPost("transfer")]
+    public async Task<IActionResult> TransferAsync([FromBody] TransferDto transferDto)
+    {
+        var (IsSuccess, MessageError) = await movementService.TransferAsync(transferDto.NumberAccountOrigin, 
+            transferDto.NumberAccountDestination, transferDto.Value);
+
+        if (IsSuccess)
+            return Ok();
+
+        return BadRequest(MessageError);
+    }
 }

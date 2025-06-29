@@ -6,4 +6,6 @@ namespace BankMore.Transfer.Domain.Services.Contracts;
 public interface ITransferService
 {
     public Task<MovementOperationEnum> CreateTransferAsync(TransferDto transferDto);
+
+    public Task<IReadOnlyCollection<Entities.Transfer>> GetTransfersByCurrentAccount(Guid currentAccountId);
 }

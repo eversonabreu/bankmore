@@ -33,6 +33,9 @@ internal sealed class TransferService(ITransferRepository transferRepository,
         return MovementOperationEnum.Success;
     }
 
+    public async Task<IReadOnlyCollection<Entities.Transfer>> GetTransfersByCurrentAccount(Guid currentAccountId)
+        => await transferRepository.GetAsync(x => x.CurrentAccountOriginId ==  currentAccountId);
+
     private async Task CreateMessageToRateRegistrationAsync(Guid transferId)
     {
         try
