@@ -59,7 +59,8 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
         return (new(numberAccount, currentAccount.Name, DateTime.UtcNow, balanceValue), MovementOperationEnum.Success);
     } 
 
-    public async Task<(bool IsSuccess, string MessageError)> TransferAsync(long numberAccountOrigin, long numberAccountDestination, decimal value)
+    public async Task<(bool IsSuccess, string MessageError)> TransferAsync(long numberAccountOrigin, 
+        long numberAccountDestination, decimal value, string authorizationHeader)
     {
         if (value <= 0m)
             return (false, "Value must be grather than 0.");
@@ -88,6 +89,7 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
 
         using var httpClient = httpClientFactory.CreateClient("ResilientClient");
         httpClient.BaseAddress = new Uri(configuration["TransferApiHost"]);
+        httpClient.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
 
         var response = await httpClient.PostAsJsonAsync("transfer/create", 
             new
@@ -120,6 +122,7 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
         }
         
         string content = await response.Content.ReadAsStringAsync();
+        content = string.IsNullOrWhiteSpace(content) ? response.StatusCode.ToString() : content;
         return (false, content);
     }
 }

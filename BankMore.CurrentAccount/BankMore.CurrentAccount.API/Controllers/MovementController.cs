@@ -72,10 +72,11 @@ public sealed class MovementController(IMovementService movementService) : Appli
     }
 
     [HttpPost("transfer")]
-    public async Task<IActionResult> TransferAsync([FromBody] TransferDto transferDto)
+    public async Task<IActionResult> TransferAsync([FromBody] TransferDto transferDto,
+        [FromHeader(Name = "Authorization")] string authorizationHeader)
     {
         var (IsSuccess, MessageError) = await movementService.TransferAsync(transferDto.NumberAccountOrigin, 
-            transferDto.NumberAccountDestination, transferDto.Value);
+            transferDto.NumberAccountDestination, transferDto.Value, authorizationHeader);
 
         if (IsSuccess)
             return Ok();
