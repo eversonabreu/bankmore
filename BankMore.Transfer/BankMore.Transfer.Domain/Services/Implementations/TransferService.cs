@@ -28,7 +28,7 @@ internal sealed class TransferService(ITransferRepository transferRepository,
         });
 
         await transferRepository.SaveChangesAsync();
-        _ = CreateMessageToRateRegistrationAsync(transfer.Id);
+        _ = CreateMessageToRateRegistrationAsync(transfer.Id, transferDto.CurrentAccountOriginId);
 
         return MovementOperationEnum.Success;
     }
@@ -36,14 +36,14 @@ internal sealed class TransferService(ITransferRepository transferRepository,
     public async Task<IReadOnlyCollection<Entities.Transfer>> GetTransfersByCurrentAccount(Guid currentAccountId)
         => await transferRepository.GetAsync(x => x.CurrentAccountOriginId ==  currentAccountId);
 
-    private async Task CreateMessageToRateRegistrationAsync(Guid transferId)
+    private async Task CreateMessageToRateRegistrationAsync(Guid transferId, Guid currentAccountOriginId)
     {
         try
         {
             logger.LogInformation("Publish message for save rate in transfer. TransferId: {TransferId}", transferId);
             using var scope = serviceProvider.CreateScope();
             var publisher = scope.ServiceProvider.GetRequiredService<IMessageService>();
-            await publisher.PublishAsync(Topics.CurrentAccountTransferTopicName, new { transferId });
+            await publisher.PublishAsync(Topics.CurrentAccountTransferTopicName, new { transferId, currentAccountOriginId });
         }
         catch (Exception exc) 
         {
