@@ -122,7 +122,6 @@ internal sealed class MovementService(IIdempotenceService idempotenceService,
         }
         
         string content = await response.Content.ReadAsStringAsync();
-        content = string.IsNullOrWhiteSpace(content) ? response.StatusCode.ToString() : content;
-        return (false, content);
+        return (false, $"Error in API Transfer. Content: '{content}'. Status code: '{(int)response.StatusCode}'.");
     }
 }

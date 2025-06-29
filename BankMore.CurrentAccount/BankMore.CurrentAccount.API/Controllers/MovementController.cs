@@ -32,6 +32,10 @@ public sealed class MovementController(IMovementService movementService) : Appli
                 CustomBadRequest(Constants.ApplicationMessages.IdempotenceKeyNullOrEmptyError,
                     Constants.ApplicationMessages.IdempotenceKeyNullOrEmptyErrorMessage),
 
+            MovementOperationEnum.InvalidType =>
+                CustomBadRequest(Constants.ApplicationMessages.FailMovementType,
+                    Constants.ApplicationMessages.FailMovementTypeMessage),
+
             MovementOperationEnum.InvalidAccount =>
                 CustomBadRequest(Constants.ApplicationMessages.CurrentAccountInvalid,
                     Constants.ApplicationMessages.CurrentAccountInvalidMessage),
@@ -42,7 +46,7 @@ public sealed class MovementController(IMovementService movementService) : Appli
 
             MovementOperationEnum.IdempotenceRequestBodyMismatch =>
                 CustomBadRequest(Constants.ApplicationMessages.IdempotenceRequestBodyMismatchError,
-                    Constants.ApplicationMessages.CurrentAccountInvalidMessage),
+                    Constants.ApplicationMessages.IdempotenceRequestBodyMismatchMessage),
 
             MovementOperationEnum.WaitingFinishProccess =>
                 Accepted(new { Message = Constants.ApplicationMessages.MovementWaitingFinishProccess }),

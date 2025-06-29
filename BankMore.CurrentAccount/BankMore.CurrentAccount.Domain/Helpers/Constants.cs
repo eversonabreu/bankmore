@@ -14,6 +14,7 @@ public static class Constants
         public const string FailDeactivateCurrentAccount = "NOT_FOUND_CURRENT_ACCOUNT";
         public const string FailMovementValue = "INVALID_VALUE";
         public const string FailMovementType = "INVALID_TYPE";
+        public const string FailMovementTypeMessage = "Somente operações de crédito são permitidas para contas que não sejam a conta logada.";
         public const string IdempotenceKeyNullOrEmptyError = "IDEMPOTENCE_KEY_NULL_OR_EMPTY";
         public const string IdempotenceKeyNullOrEmptyErrorMessage = "A chave para idempotência não foi fornecida.";
         public const string CurrentAccountInvalid = "INVALID_ACCOUNT";
