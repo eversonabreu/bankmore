@@ -13,5 +13,6 @@ public static class DependencyRegister
         services.AddScoped<IIdempotenceService, IdempotenceService>();
         services.AddScoped<IMovementService, MovementService>();
         services.AddKeyedScoped<IMessageTopicHandler, CreateMovementCurrentAccount>(Topics.CurrentAccountMovementTopicName);
+        services.AddKeyedScoped<IMessageTopicHandler, TariffingMessageService>(Topics.CurrentAccountTariffingTopicName);
     }
 }

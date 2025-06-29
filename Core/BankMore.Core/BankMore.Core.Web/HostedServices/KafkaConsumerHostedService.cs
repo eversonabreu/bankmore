@@ -110,7 +110,7 @@ internal sealed class KafkaConsumerHostedService : BackgroundService
     {
         // add here others topics
         IEnumerable<string> topics = [Topics.CurrentAccountMovementTopicName,
-            Topics.CurrentAccountTransferTopicName];
+            Topics.CurrentAccountTransferTopicName, Topics.CurrentAccountTariffingTopicName];
 
         await WaitForKafkaAsync(_config.BootstrapServers);
         await EnsureTopicsExistAsync(topics, _config.BootstrapServers);

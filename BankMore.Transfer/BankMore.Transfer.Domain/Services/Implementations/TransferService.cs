@@ -43,7 +43,8 @@ internal sealed class TransferService(ITransferRepository transferRepository,
             logger.LogInformation("Publish message for save rate in transfer. TransferId: {TransferId}", transferId);
             using var scope = serviceProvider.CreateScope();
             var publisher = scope.ServiceProvider.GetRequiredService<IMessageService>();
-            await publisher.PublishAsync(Topics.CurrentAccountTransferTopicName, new { transferId, currentAccountOriginId });
+            await publisher.PublishAsync(Topics.CurrentAccountTransferTopicName, 
+                new { TransferId = transferId, OriginId = currentAccountOriginId });
         }
         catch (Exception exc) 
         {

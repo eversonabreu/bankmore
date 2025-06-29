@@ -21,6 +21,9 @@ public sealed class TransferController : ApplicationController
         return BadRequest(Enum.GetName(typeof(MovementOperationEnum), response));
     }
 
+    // Este endpoint é bem simples mesmo, usei apenas para testes
+    // É claro que poderia ter filtros, paginação...
+
     [HttpGet("all-transfers/{currentAccountId:guid}")]
     public async Task<IActionResult> GetAllTransfersAsync([FromRoute] Guid currentAccountId,
         [FromServices] ITransferService transferService)
