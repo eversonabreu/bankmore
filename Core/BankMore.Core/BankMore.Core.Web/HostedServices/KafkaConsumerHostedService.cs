@@ -14,10 +14,13 @@ internal sealed class KafkaConsumerHostedService : BackgroundService
     private readonly ILogger<KafkaConsumerHostedService> _logger;
     private readonly ConsumerConfig _config;
     private IConsumer<Ignore, string> _consumer;
+    private ListenerTopics _listenerTopics;
 
     public KafkaConsumerHostedService(IServiceProvider serviceProvider,
-        IConfiguration configuration, ILogger<KafkaConsumerHostedService> logger)
+        IConfiguration configuration, ILogger<KafkaConsumerHostedService> logger,
+        ListenerTopics listenerTopics)
     {
+        _listenerTopics = listenerTopics;
         _serviceProvider = serviceProvider;
         _logger = logger;
 
@@ -108,15 +111,15 @@ internal sealed class KafkaConsumerHostedService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // add here others topics
-        IEnumerable<string> topics = [Topics.CurrentAccountMovementTopicName,
-            Topics.CurrentAccountTransferTopicName, Topics.CurrentAccountTariffingTopicName];
+        if (_listenerTopics.TopicNames == null || !_listenerTopics.TopicNames.Any())
+            return;
 
         await WaitForKafkaAsync(_config.BootstrapServers);
-        await EnsureTopicsExistAsync(topics, _config.BootstrapServers);
+        await EnsureTopicsExistAsync(_listenerTopics.TopicNames, _config.BootstrapServers);
         _consumer = new ConsumerBuilder<Ignore, string>(_config).Build();
         
-        _consumer.Subscribe(topics);
+        _consumer.Subscribe(_listenerTopics.TopicNames);
+        await Task.Delay(TimeSpan.FromSeconds(20), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested)
         {

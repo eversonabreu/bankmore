@@ -18,6 +18,7 @@ builder.Services.AddMvc(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfiguration("BankMore.Transfer.API", "v1");
 builder.Services.ConfigureJwtServices(builder.Configuration);
+builder.Services.AddSingleton(new ListenerTopics());
 builder.Services.AddCoreServices();
 builder.Services.AddSQliteConfiguredDbContext<ApplicationDbContext>(Constants.ApplicationDatabaseName);
 builder.Services.AddInfrastructureServices();
